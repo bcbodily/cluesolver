@@ -5,7 +5,7 @@ using Xunit;
 
 namespace cluesolver
 {
-    public class ClueGameTest
+    public class ClueSolverTest
     {
         [Fact]
         public void startGame()
@@ -16,7 +16,7 @@ namespace cluesolver
             allCards.UnionWith(GetWeaponCards());
             allCards.UnionWith(GetRoomCards());
 
-            var game = new ClueGame(players, allCards);
+            var game = new ClueSolver(players, allCards);
 
             ShowPossibleOwners(game);
 
@@ -56,7 +56,7 @@ namespace cluesolver
             return GetCards(category, names);
         }
 
-        private void ShowPossibleOwners(ClueGame game)
+        private void ShowPossibleOwners(ClueSolver game)
         {
             var allCards = new SortedSet<Card>();
             foreach (ISet<Card> cards in game.Cards.Values)

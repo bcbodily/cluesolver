@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace cluesolver
 {
-    public class ClueGame
+    public class ClueSolver
     {
         private static string ENVELOPE => "*envelope*";
 
-        public ClueGame(ISet<string> players, ISet<Card> cards)
+        public ClueSolver(ISet<string> players, ISet<Card> cards)
         {
             Players = new SortedSet<string>(players);
             Players.Add(ENVELOPE);
 
-            CardConstraints = new Dictionary<Card, Constraint<string>>();
+            CardConstraints = new Dictionary<Card, Constraint<Card, string>>();
 
             // setup cards
             var allCards = new Dictionary<string, ISet<Card>>();
@@ -25,23 +25,24 @@ namespace cluesolver
                 }
                 allCards[card.Category].Add(card);
 
-                CardConstraints[card] = new Constraint<string>(Players);
+                CardConstraints[card] = new Constraint<Card, string>(card, Players);
+                CardConstraints[card].Solved += CardConstraint_Solved;
             }
 
             Cards = new Dictionary<string, ISet<Card>>(allCards);
 
             // setup each players collection of constraints
-            PlayerConstraints = new Dictionary<string, ISet<Constraint<Card>>>();
+            PlayerConstraints = new Dictionary<string, ISet<Constraint<string, Card>>>();
             foreach (var player in Players)
             {
-                PlayerConstraints[player] = new HashSet<Constraint<Card>>();
+                PlayerConstraints[player] = new HashSet<Constraint<string, Card>>();
             }
 
             // setup envelope constraints
             foreach (var category in Cards.Keys)
             {
                 // add a constraint of having at least one of each category
-                PlayerConstraints[ENVELOPE].Add(new Constraint<Card>(Cards[category], 1));
+                PlayerConstraints[ENVELOPE].Add(new Constraint<string, Card>(ENVELOPE, Cards[category], 1));
             }
         }
 
@@ -49,13 +50,13 @@ namespace cluesolver
         /// A dictionary of the card constraints, by card
         /// </summary>
         /// <value></value>
-        private IDictionary<Card, Constraint<string>> CardConstraints { get; set; }
+        private IDictionary<Card, Constraint<Card, string>> CardConstraints { get; set; }
 
         /// <summary>
         /// A dictionary of sets of player constraints, by player
         /// </summary>
         /// <value></value>
-        public IDictionary<string, ISet<Constraint<Card>>> PlayerConstraints { get; }
+        public IDictionary<string, ISet<Constraint<string, Card>>> PlayerConstraints { get; }
 
         /// <summary>
         /// The players in the game
@@ -70,7 +71,6 @@ namespace cluesolver
         public IReadOnlyDictionary<string, ISet<Card>> Cards { get; }
 
         public ISet<string> GetPotentialOwners(Card card) => CardConstraints[card].Candidates;
-
 
         public void AddSuggestionResults(string suggester, ISet<Card> cards, ISet<string> helpers)
         {
@@ -105,18 +105,16 @@ namespace cluesolver
             foreach (var helper in helpers)
             {
                 AddPlayerConstraint(helper, cards);
-                // PlayerConstraints[helper].Add(new Constraint<Card>(cards));
             }
 
-            // UpdatePlayerConstraints();
         }
 
         private void EliminateCardCandidate(Card card, string candidate)
         {
-            CardConstraints[card].Candidates.Remove(candidate);
+            CardConstraints[card].RemoveCandidate(candidate);
             foreach (var playerConstraint in PlayerConstraints[candidate])
             {
-                playerConstraint.Candidates.Remove(card);
+                playerConstraint.RemoveCandidate(card);
             }
         }
 
@@ -133,19 +131,78 @@ namespace cluesolver
             }
 
             // create a constraint with just the possible cards
-            var constraint = new Constraint<Card>(constraintCards, count);
+            var constraint = new Constraint<string, Card>(player, constraintCards, count);
 
             // if it's not solved, add it as an unsolved constraint
             if (!constraint.IsSolved)
             {
                 PlayerConstraints[player].Add(constraint);
+                constraint.Solved += PlayerConstraint_Solved;
             }
             // otherwise, eliminate other owner candidates
             else
             {
+                HandleSolvedPlayerConstraint(constraint);
+            }
+        }
+
+        public void CardConstraint_Solved(object sender, EventArgs e)
+        {
+            var constraint = sender as Constraint<Card, string>; 
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("HANDLING CARD");
+            Console.WriteLine($"{constraint.Owner} must be {string.Join(", ", constraint.Candidates)}");
+            Console.WriteLine();
+            Console.WriteLine();
+            HandleSolvedCardConstraint(constraint);
+            constraint.Solved -= CardConstraint_Solved;
+        }
+
+        public void PlayerConstraint_Solved(object sender, EventArgs e)
+        {
+            var constraint = sender as Constraint<string, Card>; 
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("HANDLING PLAYER");
+            Console.WriteLine($"{constraint.Owner} must have {string.Join(", ", constraint.Candidates)}");
+            Console.WriteLine();
+            Console.WriteLine();
+            HandleSolvedPlayerConstraint(constraint);
+            constraint.Solved -= PlayerConstraint_Solved;
+        }
+
+        private void HandleSolvedCardConstraint(Constraint<Card, string> constraint)
+        {
+            // card that has a single owner
+            // remove card from all players that are not the owner
+            if (constraint.IsSolved)
+            {
+                var owners = constraint.Candidates;
+                foreach (var player in Players)
+                {
+                    if (!owners.Contains(player))
+                    {
+                        foreach (var pc in PlayerConstraints[player])
+                        {
+                            pc.RemoveCandidate(constraint.Owner);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void HandleSolvedPlayerConstraint(Constraint<string, Card> constraint)
+        {
+            // make sure it really is solved
+            if (constraint.IsSolved)
+            {
+                // for every candidate, reduce to only the constraint owner
                 foreach (var card in constraint.Candidates)
                 {
-                    CardConstraints[card].Candidates.IntersectWith(new SortedSet<string> { player });
+                    CardConstraints[card].Candidates.IntersectWith(new SortedSet<string> { constraint.Owner });
                 }
             }
         }

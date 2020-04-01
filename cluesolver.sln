@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cluesolver-lib", "cluesolve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cluesolver-test", "cluesolver-test\cluesolver-test.csproj", "{05B8FCFD-7B89-4055-A19D-F653050E8A64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cluesolver", "cluesolver\cluesolver.csproj", "{609B0C59-3E67-48DC-A701-D4CA8777D085}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{05B8FCFD-7B89-4055-A19D-F653050E8A64}.Release|x64.Build.0 = Release|Any CPU
 		{05B8FCFD-7B89-4055-A19D-F653050E8A64}.Release|x86.ActiveCfg = Release|Any CPU
 		{05B8FCFD-7B89-4055-A19D-F653050E8A64}.Release|x86.Build.0 = Release|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Debug|x64.Build.0 = Debug|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Debug|x86.Build.0 = Debug|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Release|Any CPU.Build.0 = Release|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Release|x64.ActiveCfg = Release|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Release|x64.Build.0 = Release|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Release|x86.ActiveCfg = Release|Any CPU
+		{609B0C59-3E67-48DC-A701-D4CA8777D085}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

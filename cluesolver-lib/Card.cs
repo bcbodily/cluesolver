@@ -58,7 +58,7 @@ namespace cluesolver
         /// Returns a string representation of this value
         /// </summary>
         /// <returns>a string in the following format: <code>Category:Title</code></returns>
-        public override string ToString() => $"{Category}:{Title}";
+        public override string ToString() => $"{Title}";
 
         /// <summary>
         /// Compares this value with a specified <see cref="Card"/> and indicates whether this value preceds, follows, or appears in the same position in the sort order as ths specified <see cref="Card"/>

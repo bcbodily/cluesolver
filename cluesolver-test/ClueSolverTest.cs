@@ -7,30 +7,6 @@ namespace cluesolver
 {
     public class ClueSolverTest
     {
-        [Fact]
-        public void startGame()
-        {
-            var players = new SortedSet<string> { "mom", "dad", "daniel", "brynn" };
-            var allCards = new SortedSet<Card>();
-
-            allCards.UnionWith(GetWeaponCards());
-            allCards.UnionWith(GetRoomCards());
-
-            var game = new ClueSolver(players, allCards);
-
-            ShowPossibleOwners(game);
-
-            // do a round
-            var roundCards = new SortedSet<Card> {
-                new Card("room", "conservatory"),
-                new Card("weapon", "knife") };
-
-            game.AddSuggestionResults("dad", roundCards, new SortedSet<string> { "brynn", "mom" } );
-
-            ShowPossibleOwners(game);
-
-        }
-
 
         private ISet<Card> GetCards(string category, string[] names)
         {

@@ -12,14 +12,18 @@ namespace cluesolver
         public Constraint(TOwner owner, IEnumerable<TItem> candidates, int count = 1)
         {
             Owner = owner;
-            CurrentCandidates = new SortedSet<TItem>(candidates);
-            MinimumCandidates = count;
+            CandidateSet = new SortedSet<TItem>(candidates);
+            NumberOfOwnedCandidates = count;
         }
 
+        /// <summary>
+        /// The owner that must own at least <see cref="Constraint.NumberOfOwnedCandidates"/> number of the items in <see cref="Constraint.Candidates"/>
+        /// </summary>
+        /// <value></value>
         public TOwner Owner { get; }
 
         /// <summary>
-        /// Raised when the constraint is solved (the number of candidates is reduced to the minimum)
+        /// Raised when the constraint is solved (the number of candidates is reduced to <see cref="Constraint.NumberOfOwnedCandidates"/>)
         /// </summary>
         public event EventHandler<ConstraintSolvedEventArgs<TOwner>> Solved;
 
@@ -33,21 +37,21 @@ namespace cluesolver
         /// A set of items that includes the candidates that must be owned by a particular owner
         /// </summary>
         /// <value></value>
-        private ISet<TItem> CurrentCandidates { get; }
+        private ISet<TItem> CandidateSet { get; }
 
-        public ISet<TItem> Candidates => new SortedSet<TItem>(CurrentCandidates);
+        public IEnumerable<TItem> Candidates => CandidateSet;
 
         /// <summary>
         /// The number of candidates that must be owned by a particular owner
         /// </summary>
         /// <value></value>
-        public int MinimumCandidates { get; }
+        public int NumberOfOwnedCandidates { get; }
 
         public void RemoveCandidate(TItem candidate)
         {
             if (!IsSolved)
             {
-                CurrentCandidates.Remove(candidate);
+                CandidateSet.Remove(candidate);
                 if (IsSolved)
                 {
                     OnSolved(new ConstraintSolvedEventArgs<TOwner>(Owner));
@@ -55,7 +59,7 @@ namespace cluesolver
             }
         }
 
-        public bool IsSolved => CurrentCandidates.Count == MinimumCandidates;
+        public bool IsSolved => CandidateSet.Count == NumberOfOwnedCandidates;
     }
 
     public class ConstraintSolvedEventArgs<T> : EventArgs

@@ -5,7 +5,7 @@ namespace cluesolver
     /// <summary>
     /// Represents a single card, with a category and title
     /// </summary>
-    public struct Card : IEquatable<Card>, IComparable<Card>
+    readonly public struct Card : IEquatable<Card>, IComparable<Card>
     {
         /// <summary>
         /// The category of the card

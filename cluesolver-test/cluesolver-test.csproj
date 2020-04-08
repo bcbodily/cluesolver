@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\cluesolver-lib\cluesolver-lib.csproj" />
+    <ProjectReference Include="..\cluesolver\cluesolver.csproj" />
   </ItemGroup>
 
 </Project>

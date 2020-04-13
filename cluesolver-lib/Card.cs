@@ -75,11 +75,11 @@ namespace cluesolver
         }
 
         public static bool operator ==(Card lhs, Card rhs) =>
-            lhs.Category.Equals(rhs.Category) &&
-            lhs.Title.Equals(rhs.Title);
+            lhs.Category == rhs.Category &&
+            lhs.Title == rhs.Title;
 
         public static bool operator !=(Card lhs, Card rhs) =>
-            !lhs.Category.Equals(rhs.Category) ||
-            !lhs.Title.Equals(rhs.Title);
+            lhs.Category != rhs.Category ||
+            lhs.Title != rhs.Title;
     }
 }

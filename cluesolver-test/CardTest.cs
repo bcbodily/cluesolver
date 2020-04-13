@@ -34,9 +34,10 @@ namespace cluesolver
         [InlineData("a")]
         [InlineData("b")]
 
-        public void CompareTo_Category_is_same_Title_is_same_returns_zero(string title) {
+        public void CompareTo_Category_is_same_Title_is_same_returns_zero(string title)
+        {
             var category = "category";
-            
+
             var card1 = new Card(category: category, title: title);
             var card2 = new Card(category: category, title: title);
 
@@ -59,9 +60,10 @@ namespace cluesolver
         [InlineData("b", "a")]
         [InlineData("c", "b")]
 
-        public void CompareTo_Category_is_same_Title_follows_returns_greater_than_zero(string title1, string title2) {
+        public void CompareTo_Category_is_same_Title_follows_returns_greater_than_zero(string title1, string title2)
+        {
             var category = "category";
-            
+
             var card1 = new Card(category: category, title: title1);
             var card2 = new Card(category: category, title: title2);
 
@@ -84,9 +86,10 @@ namespace cluesolver
         [InlineData("a", "b")]
         [InlineData("b", "c")]
 
-        public void CompareTo_Category_is_same_Title_precedes_returns_less_than_zero(string title1, string title2) {
+        public void CompareTo_Category_is_same_Title_precedes_returns_less_than_zero(string title1, string title2)
+        {
             var category = "category";
-            
+
             var card1 = new Card(category: category, title: title1);
             var card2 = new Card(category: category, title: title2);
 
@@ -340,6 +343,51 @@ namespace cluesolver
             Assert.NotEqual(card.Category, other.Category);
 
             var actual = card == other;
+            var expected = false;
+
+            Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Verifies the equality operator, when the lhs argument is default and the rhs argument is default, properly returns true
+        /// </summary>
+        [Fact]
+        public void operator_equality_lhs_is_default_rhs_is_default_returns_true()
+        {
+            Card lhs = new Card();
+            Card rhs = new Card();
+
+            var actual = lhs == rhs;
+            var expected = true;
+
+            Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Verifies the equality operator, when the lhs argument is default and the rhs argument is not, properly returns false
+        /// </summary>
+        [Fact]
+        public void operator_equality_lhs_is_default_rhs_isNot_default_returns_false()
+        {
+            Card lhs = new Card();
+            Card rhs = new Card("category", "title");
+
+            var actual = lhs == rhs;
+            var expected = false;
+
+            Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Verifies the equality operator, when the lhs argument is not default and the lhs argument is default, properly returns false
+        /// </summary>
+        [Fact]
+        public void operator_equality_lhs_isNot_default_rhs_is_default_returns_false()
+        {
+            Card lhs = new Card("category", "title");
+            Card rhs = new Card();
+
+            var actual = lhs == rhs;
             var expected = false;
 
             Assert.Equal(expected, actual);

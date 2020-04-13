@@ -136,5 +136,83 @@ namespace cluesolver
 
             Assert.Equal(expected, actual);
         }
+
+        /// <summary>
+        /// Verifies <see cref="Revelation.Equals(object)"/> when the other object is null, properly return false
+        /// </summary>
+        [Fact]
+        public void Equals_Object_other_is_null_returns_false()
+        {
+            var revelation = new Revelation("player", new Card());
+            object obj = null;
+
+            Assert.Null(obj);
+
+            var actual = revelation.Equals(obj);
+            var expected = false;
+
+            Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Verifies <see cref="Revelation.Equals(object)"/>, when the other object is a <see cref="Revelation"/> for which <see cref="Revelation.Card"/> is not equal, properly return false
+        /// </summary>
+        [Fact]
+        public void Equals_Object_other_is_Revelation_Card_isNot_equal_returns_false()
+        {
+            var card1 = new Card("cat", "title");
+            Card card2 = new Card();
+            var player = "player";
+
+            var revelation = new Revelation(player, card1);
+            object obj = new Revelation(player, card2);
+
+            Assert.True(obj is Revelation);
+            Assert.NotEqual(revelation.Card, ((Revelation)(obj)).Card);
+
+            var actual = revelation.Equals(obj);
+            var expected = false;
+
+            Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Verifies <see cref="Revelation.Equals(object)"/>, when the other object is a <see cref="Revelation"/> for which <see cref="Revelation.Player"/> is not equal, properly return false
+        /// </summary>
+        [Fact]
+        public void Equals_Object_other_is_Revelation_Player_isNot_equal_returns_false()
+        {
+            Card card = new Card();
+            var player1 = "player1";
+            var player2 = "player2";
+
+            var revelation = new Revelation(player1, card);
+            object obj = new Revelation(player2, card);
+
+            Assert.True(obj is Revelation);
+            Assert.NotEqual(revelation.Player, ((Revelation)(obj)).Player);
+
+            var actual = revelation.Equals(obj);
+            var expected = false;
+
+            Assert.Equal(expected, actual);
+        }
+
+        /// <summary>
+        /// Verifies <see cref="Revelation.Equals(object)"/>, when the other object is not a <see cref="Revelation"/>, properly returns false
+        /// </summary>
+        [Fact]
+        public void Equals_Object_other_is_not_Revelation_returns_false()
+        {
+            var revelation = new Revelation("player", new Card());
+            object obj = "string";
+
+            Assert.False(obj is Revelation);
+
+            var actual = revelation.Equals(obj);
+            var expected = false;
+
+            Assert.Equal(expected, actual);
+        }
     }
 }
